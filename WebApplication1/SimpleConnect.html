@@ -1,0 +1,28 @@
+﻿<div class="jumbotron">
+    <h1>Status:</h1>
+    <div class="lead" id="status"></div>
+</div>
+
+<script src="Scripts/jquery-1.10.2.min.js"></script>
+<script src="Scripts/jquery.signalR-2.0.2.js"></script>
+<script src="/signalr/hubs"></script>
+
+<script type="text/javascript">
+    function addStatus(s) {
+        var p = $("<p>");
+        p.text(s);
+        $("#status").append(p);
+    }
+
+    $(function () {
+        var fooHub = $.connection.fooHub;
+        addStatus("connecting");
+        $.connection.hub.start({ transport: "longPolling" }).done(function () {
+            addStatus("connected");
+            fooHub.server.hello().done(function (s) {
+                addStatus("hello");
+            });
+        });
+    });
+</script>
+
